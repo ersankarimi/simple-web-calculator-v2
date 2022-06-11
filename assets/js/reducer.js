@@ -16,10 +16,10 @@ const reducer = (action) => {
 	const outputField = document.querySelector('#answer')
 	const historyField = document.querySelector('#history')
 
-	console.log(historyField)
+	!historyField.classList.contains('hidden') &&
+		historyField.classList.toggle('hidden')
 
 	let { type, payload } = action
-	console.log(type, payload)
 
 	switch (type) {
 		case 'number':
@@ -32,7 +32,6 @@ const reducer = (action) => {
 
 			if (payload === '.') {
 				if (state.isDot || state.numberOfDots > 0) {
-					console.log(state.isDot)
 					return state
 				}
 
@@ -66,7 +65,6 @@ const reducer = (action) => {
 				isOperator: false,
 			}
 
-			console.log(state)
 			// set input value
 			return (inputField.innerText = state.input)
 
@@ -104,7 +102,6 @@ const reducer = (action) => {
 		case 'plus-minus':
 		case 'percent':
 			if (state.isBlank || !state.isNumber) {
-				console.log('sukkses')
 				return state
 			}
 
@@ -155,70 +152,67 @@ const reducer = (action) => {
 			}
 			return (inputField.innerText = state.input || 0)
 		case 'delete':
-			const stateSplit = state.input
-				.split(' ')
-				.filter((item) => item !== '')
+			if (!state.isBlank) {
+				const stateSplit = state.input
+					.split(' ')
+					.filter((item) => item !== '')
 
-			if (state.length) return state
+				if (state.length) return state
 
-			const deleteElement = stateSplit.pop().slice(0, -1)
-			stateSplit.push(deleteElement)
+				const deleteElement = stateSplit.pop().slice(0, -1)
+				stateSplit.push(deleteElement)
 
-			const newInput = stateSplit
-				.filter((value) => value !== '')
-				.reduce((acc, value) => {
-					if (String(value).includes('.')) {
-						console.log('ke dua true')
-						state = {
-							...state,
-							numberOfDots: 1,
-							isDot: true,
+				const newInput = stateSplit
+					.filter((value) => value !== '')
+					.reduce((acc, value) => {
+						if (String(value).includes('.')) {
+							state = {
+								...state,
+								numberOfDots: 1,
+								isDot: true,
+							}
 						}
-					}
 
-					if (Boolean(Number(value)) && Number(value) < 0) {
-						console.log('ke tiga true')
-						state = {
-							...state,
-							isMines: true,
-							isNumber: false,
-							isOperator: false,
+						if (Boolean(Number(value)) && Number(value) < 0) {
+							state = {
+								...state,
+								isMines: true,
+								isNumber: false,
+								isOperator: false,
+							}
 						}
-					}
 
-					if (/[-+*/%]/gi.test(value)) {
-						console.log('ke empat true')
-						state = {
-							...state,
-							isOperator: true,
-							isNumber: false,
-							isDot: false,
-							numberOfDots: 0,
+						if (/[-+*/%]/gi.test(value)) {
+							state = {
+								...state,
+								isOperator: true,
+								isNumber: false,
+								isDot: false,
+								numberOfDots: 0,
+							}
 						}
-					}
 
-					if (/[\d]/.test(Number(value))) {
-						console.log('kelima true')
-						state = {
-							...state,
-							isNumber: true,
-							isOperator: false,
+						if (/[\d]/.test(Number(value))) {
+							state = {
+								...state,
+								isNumber: true,
+								isOperator: false,
+							}
 						}
-					}
 
-					console.log(value)
-					return (acc += /[-+/*%]/gi.test(value)
-						? ` ${value} `
-						: `${value}`)
-				}, '')
+						return (acc += /[-+/*%]/gi.test(value)
+							? ` ${value} `
+							: `${value}`)
+					}, '')
 
-			state = {
-				...state,
-				input: newInput,
+				state = {
+					...state,
+					input: newInput,
+				}
+
+				return (inputField.innerText = state.input)
 			}
-
-			console.log('STATEEEEEEEEE', state)
-			return (inputField.innerText = state.input)
+			return (state = { ...state })
 		default:
 			const inputValue = state.input || '0'
 			const outputValue = String(Function('return ' + inputValue)())
@@ -247,14 +241,10 @@ const reducer = (action) => {
 						'text-white-gray-100'
 					)
 					historyItem.innerHTML = `
-						<span class="text-white-gray-100 -tracking-tight border-[1px] p-2 border-gray-line">${input}</span>&nbsp;
-						=&nbsp;
-						<span class="text-white-gray-100 -tracking-tight border-[1px] p-2 border-gray-line">${output}</span>
+						<span class="text-white-gray-100 -tracking-tight border-[1px] p-2 border-gray-line">${input}</span>&nbsp;=&nbsp;<span class="text-white-gray-100 -tracking-tight border-[1px] p-2 border-gray-line">${output}</span>
 					`
 					historyField.appendChild(historyItem)
 				})
-
-			console.log(state.history)
 
 			return (
 				(inputField.innerText = state.output),

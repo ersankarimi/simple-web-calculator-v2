@@ -515,6 +515,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 100%;
 }
 
+.max-h-full{
+  max-height: 100%;
+}
+
+.max-h-\[100px\]{
+  max-height: 100px;
+}
+
+.max-h-\[200px\]{
+  max-height: 200px;
+}
+
 .min-h-\[80px\]{
   min-height: 80px;
 }
@@ -589,6 +601,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .justify-evenly{
   justify-content: space-evenly;
+}
+
+.overflow-auto{
+  overflow: auto;
+}
+
+.overflow-hidden{
+  overflow: hidden;
 }
 
 .overflow-x-auto{

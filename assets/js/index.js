@@ -18,7 +18,6 @@ const historyField = document.querySelector('#history')
 const handleOpenCloseHistory = (e) => {
 	e.stopPropagation()
 	const id = e.target.id
-	console.log(id)
 
 	if (
 		id !== 'history-icon' &&
@@ -34,7 +33,6 @@ const handleOpenCloseHistory = (e) => {
 	if (id === 'history') {
 		return
 	}
-	console.log('lelelelle')
 	return historyField.classList.toggle('hidden')
 }
 

@@ -8,7 +8,8 @@ main.classList.add(
 	'p-4',
 	'md:w-[40%]',
 	'lg:w-[30%]',
-	'2xl:w-[25%]'
+	'2xl:w-[25%]',
+	'overflow-hidden'
 )
 
 main.appendChild(display)

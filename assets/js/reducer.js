@@ -1,6 +1,7 @@
 let state = {
 	input: '',
 	output: 0,
+	history: [],
 	isOperator: false,
 	isBlank: true,
 	isNumber: false,
@@ -13,6 +14,9 @@ let state = {
 const reducer = (action) => {
 	const inputField = document.querySelector('#input')
 	const outputField = document.querySelector('#answer')
+	const historyField = document.querySelector('#history')
+
+	console.log(historyField)
 
 	let { type, payload } = action
 	console.log(type, payload)
@@ -28,6 +32,7 @@ const reducer = (action) => {
 
 			if (payload === '.') {
 				if (state.isDot || state.numberOfDots > 0) {
+					console.log(state.isDot)
 					return state
 				}
 
@@ -115,11 +120,21 @@ const reducer = (action) => {
 						? Number(inputSplit[inputSplit.length - 1]) / 100
 						: Number(inputSplit[inputSplit.length - 1]) * 100
 
+				const finalData = inputSplit.reduce((acc, value) => {
+					state = {
+						...state,
+						isDot: String(value).includes('.'),
+						numberOfDots: String(value).includes('.') ? 1 : 0,
+					}
+
+					return (acc += Boolean(Number(value))
+						? `${value}`
+						: ` ${value} `)
+				}, '')
+
 				state = {
 					...state,
-					input: inputSplit.reduce((acc, value) => {
-						return (acc += `${value} `)
-					}, ''),
+					input: finalData,
 					isMines:
 						type === 'plus-minus' ? !state.isMines : state.isMines,
 					isPercent:
@@ -209,6 +224,8 @@ const reducer = (action) => {
 			const outputValue = String(Function('return ' + inputValue)())
 			const dots = String(outputValue).includes('.')
 			state = {
+				...state,
+				history: [`${state.input} = ${outputValue}`],
 				input: outputValue,
 				output: outputValue,
 				isOperator: false,
@@ -218,7 +235,27 @@ const reducer = (action) => {
 				numberOfDots: dots ? 1 : 0,
 				isMines: Number(outputValue) < 0,
 			}
-			console.log(state)
+			state.history.length &&
+				state.history.forEach((value) => {
+					const historyItem = document.createElement('div')
+					const [input, output] = value.split('=')
+					historyItem.classList.add(
+						'p-2',
+						'text-sm',
+						'items-center',
+						'flex',
+						'text-white-gray-100'
+					)
+					historyItem.innerHTML = `
+						<span class="text-white-gray-100 -tracking-tight border-[1px] p-2 border-gray-line">${input}</span>&nbsp;
+						=&nbsp;
+						<span class="text-white-gray-100 -tracking-tight border-[1px] p-2 border-gray-line">${output}</span>
+					`
+					historyField.appendChild(historyItem)
+				})
+
+			console.log(state.history)
+
 			return (
 				(inputField.innerText = state.output),
 				(outputField.innerText = state.output)

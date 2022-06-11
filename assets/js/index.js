@@ -8,4 +8,36 @@ root.classList.add(
 	'items-center',
 	'flex'
 )
+
 root.appendChild(main)
+
+const historyIconContainer = document.querySelector('#history-icon-container')
+const historyIcon = document.querySelector('#history-icon')
+const historyField = document.querySelector('#history')
+
+const handleOpenCloseHistory = (e) => {
+	e.stopPropagation()
+	const id = e.target.id
+	console.log(id)
+
+	if (
+		id !== 'history-icon' &&
+		id !== 'history-icon-container' &&
+		id !== 'history'
+	) {
+		return (
+			!historyField.classList.contains('hidden') &&
+			historyField.classList.toggle('hidden')
+		)
+	}
+
+	if (id === 'history') {
+		return
+	}
+	console.log('lelelelle')
+	return historyField.classList.toggle('hidden')
+}
+
+document.body.addEventListener('click', handleOpenCloseHistory)
+historyIcon.addEventListener('click', handleOpenCloseHistory)
+historyIconContainer.addEventListener('click', handleOpenCloseHistory)

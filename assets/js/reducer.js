@@ -130,7 +130,7 @@ const reducer = (action) => {
 		case 'clear':
 			state = {
 				input: '',
-				output: 0,
+				output: '',
 				isOperator: false,
 				isBlank: true,
 				isNumber: false,
@@ -205,7 +205,8 @@ const reducer = (action) => {
 			console.log('STATEEEEEEEEE', state)
 			return (inputField.innerText = state.input)
 		default:
-			const outputValue = String(Function('return ' + state.input)())
+			const inputValue = state.input || '0'
+			const outputValue = String(Function('return ' + inputValue)())
 			const dots = String(outputValue).includes('.')
 			state = {
 				input: outputValue,
